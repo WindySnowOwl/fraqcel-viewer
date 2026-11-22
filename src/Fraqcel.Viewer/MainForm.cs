@@ -88,7 +88,9 @@ internal sealed partial class MainForm : Form
 
     // Status bar
     private readonly ToolStripStatusLabel lblStatus = new() { Spring = true, TextAlign = ContentAlignment.MiddleLeft };
-    private readonly ToolStripStatusLabel lblPixel = new() { AutoSize = false, Width = 140 };
+    // Sized to its text: "row 510, col 514, iteration 1279.416" didn't fit a fixed 140 px and was cut at
+    // both ends (2026-11-22). lblStatus springs, so it gives up the room and the items on the right stay put.
+    private readonly ToolStripStatusLabel lblPixel = new() { AutoSize = true };
     private readonly ToolStripProgressBar progressBar = new() { Width = 160, Minimum = 0, Maximum = 100 };
     private readonly ToolStripButton btnCancel = new("Cancel") { Enabled = false };
     private readonly ToolStripButton btnOpenImage = new("Open last image") { Enabled = false };
@@ -232,11 +234,7 @@ internal sealed partial class MainForm : Form
         // Events
         canvas.BoxSelected += OnBoxSelected;
         canvas.PixelClicked += OnPixelClicked;
-        canvas.PixelHovered += p =>
-        {
-            hoveredPixel = p;
-            lblPixel.Text = p is Point q ? PixelText(q) : "";
-        };
+        canvas.PixelHovered += ShowPixel;
         canvas.WheelStep += OnWheelStep;
         btnRenderImage.Click += (_, _) => _ = RenderImageAsync();
         btnSaveView.Click += (_, _) => SaveView();
@@ -918,6 +916,13 @@ internal sealed partial class MainForm : Form
     /// from the navigation render, as Fraqcel showed it before 2.8 (its author's suggestion,
     /// 2026-11-13). An in-set pixel holds the maximum, and says so.
     /// </summary>
+    /// <summary>The footer for the pixel under the pointer, or nothing when the pointer leaves the image.</summary>
+    private void ShowPixel(Point? p)
+    {
+        hoveredPixel = p;
+        lblPixel.Text = p is Point q ? PixelText(q) : "";
+    }
+
     private string PixelText(Point q)
     {
         string where = "row " + q.Y + ", col " + q.X;
@@ -1105,6 +1110,30 @@ internal sealed partial class MainForm : Form
                    "the footer says in set where the image shows the set: " + inSet + " in set, " + disagree + " disagree, " + shifted +
                    " one pixel off; the center reads \"" + PixelText(new Point(img.Width / 2, img.Height / 2)) + "\", a corner \"" +
                    PixelText(new Point(0, 0)) + "\"");
+        }
+
+        // The footer fits its text (2026-11-22: a fixed 140 px label cut "row 510, col 514, iteration
+        // 1279.416" at both ends). Through ShowPixel, the hover's own path: the longest text on this image,
+        // then the longest the label can get. The needed width is logged; the old 140 px is the control.
+        if (canvas.Image is Bitmap im2)
+        {
+            var longest = new Point(0, 0);
+            for (int y = 0; y < im2.Height; y += 7)
+                for (int x = 0; x < im2.Width; x += 7)
+                    if (PixelText(new Point(x, y)).Length > PixelText(longest).Length) longest = new Point(x, y);
+            foreach (string? text in new[] { null, "row 9999, col 9999, iteration 9999999.999 (in set)" })
+            {
+                if (text == null) ShowPixel(longest);
+                else lblPixel.Text = text;
+                await Task.Delay(50);
+                int need = TextRenderer.MeasureText(lblPixel.Text, lblPixel.Font).Width;
+                var strip = lblPixel.Owner!.DisplayRectangle;
+                Expect(lblPixel.Placement == ToolStripItemPlacement.Main && lblPixel.Bounds.Width >= need &&
+                       lblPixel.Bounds.Left >= strip.Left && lblPixel.Bounds.Right <= strip.Right,
+                       "the footer fits \"" + lblPixel.Text + "\": needs " + need + " px, has " + lblPixel.Bounds.Width +
+                       " at " + lblPixel.Bounds.Left + ".." + lblPixel.Bounds.Right + " of " + strip.Width);
+            }
+            ShowPixel(null);
         }
 
         // The controls added on 2026-11-21 (MainForm.FeatureChecks.cs); they end back at the starting view.

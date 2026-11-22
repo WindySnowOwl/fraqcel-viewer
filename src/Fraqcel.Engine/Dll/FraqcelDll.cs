@@ -22,6 +22,12 @@ public static class FraqcelDll
     public const string FileNameX64 = "FraqcelLib2150_x64.dll";
     public const string FileNameX86 = "FraqcelLib2150_x86.dll";
 
+    /// <summary>Fraqcel's website.</summary>
+    public const string Website = "https://fraqcel.weebly.com/";
+
+    /// <summary>Fraqcel's download page. The DLLs are in the download's "optional DLL files\fraqcel" folder.</summary>
+    public const string DownloadPage = "https://fraqcel.weebly.com/download.html";
+
     /// <summary>Known SHA-256 hashes of the shipped Fraqcel 2.15.0 DLLs.</summary>
     public static readonly (string File, string Sha256)[] Known =
     {

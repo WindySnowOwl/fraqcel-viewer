@@ -57,6 +57,8 @@ internal static class Program
         catch (DllLoadException e)
         {
             Console.Error.WriteLine("fraqcel-cli: " + e.Message);
+            Console.Error.WriteLine("fraqcel-cli: Fraqcel's DLLs are in the \"optional DLL files\\fraqcel\" folder of Fraqcel's download, " +
+                                    FraqcelDll.DownloadPage + ". Copy " + FraqcelDll.FileNameX64 + " next to fraqcel-cli.exe, or pass --dll PATH.");
             Console.WriteLine("fraqcel status=DNF-engine-missing");
             return EngineMissing;
         }

@@ -8,6 +8,8 @@ The prototype's own code is under the Zero-Clause BSD license (0BSD): anyone may
 
 ## Fraqcel
 
+Fraqcel's website: <https://fraqcel.weebly.com/>
+
 Parts of this prototype are ported from Fraqcel 2.15.0's VBA, or taken from its workbook:
 
 - the render flow and glitch correction: `Renderer.cs` and `GlitchRegions.cs`;
@@ -20,7 +22,7 @@ Parts of this prototype are ported from Fraqcel 2.15.0's VBA, or taken from its 
 - supersampling: `Supersampling.cs`;
 - defaults: `RenderSettings.cs`.
 
-The prototype calls Fraqcel's stock DLL (`FraqcelLib2150_x64.dll`), which it does not modify. The DLL is fetched from a local Fraqcel installation by `tools/get-fraqcel-dll.ps1`; it is not included here.
+The prototype calls Fraqcel's stock DLL (`FraqcelLib2150_x64.dll`), which it does not modify. The DLL is fetched from a local Fraqcel installation by `tools/get-fraqcel-dll.ps1`; it is not included here. It comes with Fraqcel's download, <https://fraqcel.weebly.com/download.html>, in the `optional DLL files\fraqcel` folder.
 
 Fraqcel's license:
 

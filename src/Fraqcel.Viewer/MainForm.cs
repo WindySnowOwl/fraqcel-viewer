@@ -1156,6 +1156,13 @@ internal sealed partial class MainForm : Form
         {
             dlg.Show(this);
             await Task.Delay(300);
+            // The link for someone without Fraqcel: one link, on the site's name, to the download page.
+            // Not clicked here: that would open the browser.
+            var links = dlg.DownloadLinkLabel.Links;
+            Expect(links.Count == 1 && (string)links[0].LinkData == FraqcelDll.DownloadPage &&
+                   dlg.DownloadLinkLabel.Text.Substring(links[0].Start, links[0].Length) == "fraqcel.weebly.com",
+                   "the dialog links to Fraqcel's download page: \"" + dlg.DownloadLinkLabel.Text + "\" -> " +
+                   (links.Count > 0 ? links[0].LinkData : "no link"));
             dlg.DllBox.Text = Application.ExecutablePath;
             Expect(!dlg.CheckPassed && dlg.CheckText.StartsWith("Unknown Fraqcel DLL"), "the dialog refuses another file: " + dlg.CheckText);
             dlg.OkButton.PerformClick();

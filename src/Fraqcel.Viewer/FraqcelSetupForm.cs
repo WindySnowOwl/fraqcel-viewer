@@ -1,6 +1,8 @@
 // Part of the unofficial Fraqcel host prototype.
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -37,6 +39,7 @@ internal sealed class FraqcelSetupForm : Form
     private readonly Label lblCheck = new() { AutoSize = true, MaximumSize = new Size(460, 0), Margin = new Padding(3, 2, 3, 8) };
     private readonly Button btnOk = new() { Text = "OK", AutoSize = true, MinimumSize = new Size(88, 0) };
     private readonly Button btnCancel = new() { AutoSize = true, MinimumSize = new Size(88, 0), DialogResult = DialogResult.Cancel };
+    private readonly LinkLabel lnkDownload;
     private bool syncing;
 
     /// <param name="problem">Why the dialog is shown (for example, the saved DLL failed), or null.</param>
@@ -47,6 +50,7 @@ internal sealed class FraqcelSetupForm : Form
         this.settings = settings;
         this.settingsPath = settingsPath;
         this.screen = screen;
+        lnkDownload = DownloadLink();
 
         SuspendLayout();
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -73,6 +77,7 @@ internal sealed class FraqcelSetupForm : Form
             "The viewer runs Fraqcel's own DLL, unmodified. Choose the folder Fraqcel is installed in, " +
             "and its 64-bit DLL, " + FraqcelDll.FileNameX64 + ". Fraqcel's instructions put it in " +
             FraqcelInstructionsFolder + ". The viewer saves your choice and uses it from then on.", SystemColors.ControlText));
+        Span(t, 0, 3, lnkDownload);
         if (problem != null) Span(t, 0, 3, Wrapped(problem, Bad));
 
         Field(t, "Fraqcel folder", txtFolder, "Browse…", BrowseFolder);
@@ -113,6 +118,7 @@ internal sealed class FraqcelSetupForm : Form
     internal Button OkButton => btnOk;
     internal string CheckText => lblCheck.Text;
     internal bool CheckPassed { get; private set; }
+    internal LinkLabel DownloadLinkLabel => lnkDownload;
 
     protected override void OnLoad(EventArgs e)
     {
@@ -234,6 +240,32 @@ internal sealed class FraqcelSetupForm : Form
         if (folder.Length == 0 || !IsInside(dlg.FileName, folder))
             txtFolder.Text = Path.GetDirectoryName(dlg.FileName) ?? "";
         syncing = false;
+    }
+
+    /// <summary>For someone who doesn't have Fraqcel yet: where to get it, and where its DLLs are.</summary>
+    private LinkLabel DownloadLink()
+    {
+        const string site = "fraqcel.weebly.com";
+        string text = "Don't have Fraqcel? Download it from its website, " + site + ". The DLLs are in the " +
+                      "\"optional DLL files\\fraqcel\" folder of the download.";
+        var link = new LinkLabel { Text = text, AutoSize = true, MaximumSize = new Size(640, 0), Margin = new Padding(3, 0, 3, 8) };
+        link.Links.Clear();
+        link.Links.Add(text.IndexOf(site, StringComparison.Ordinal), site.Length, FraqcelDll.DownloadPage);
+        link.LinkClicked += (_, e) =>
+        {
+            string url = (string)e.Link.LinkData;
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                e.Link.Visited = true;
+            }
+            catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or FileNotFoundException)
+            {
+                MessageBox.Show(this, "The browser didn't open. Fraqcel's download page is:" + Environment.NewLine + url,
+                                Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        };
+        return link;
     }
 
     private void SetCheck(string text, Color color)

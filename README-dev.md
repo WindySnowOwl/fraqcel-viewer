@@ -9,6 +9,8 @@ An unofficial prototype that runs Fraqcel 2.15.0's stock DLL without Excel. It h
 
 ```text
 source/
+  README.md                          for users: getting started, what it does, limits
+  docs/                              the screenshots README.md shows
   Fraqcel.Host.sln
   Directory.Build.props / .targets   shared settings; copies the stock DLL next to the CLI and the tests
   lib/                               the stock DLLs (fetched by tools/get-fraqcel-dll.ps1; not checked in)
@@ -44,7 +46,7 @@ Requirements:
 - Windows with .NET Framework 4.8, which Windows 10 and 11 include.
 - A .NET SDK. The prototype builds with 6.0.203 and with 10.0.404, the version the design calls for.
 - The .NET Framework 4.8 reference assemblies (Developer Pack).
-- Fraqcel 2.15.0's DLLs, both x64 and x86, in `C:\fraqcel` as Fraqcel's own instructions place them, or in the folder given to `-Source`.
+- Fraqcel 2.15.0's DLLs, both x64 and x86, in `C:\fraqcel` as Fraqcel's own instructions place them, or in the folder given to `-Source`. They are in the `optional DLL files\fraqcel` folder of Fraqcel's download, <https://fraqcel.weebly.com/download.html>.
 
 Steps:
 
@@ -65,6 +67,7 @@ src\Fraqcel.Viewer\bin\Release\net48\FraqcelViewer.exe [--kfr scene.kfr] [--moni
 Where Fraqcel is:
 
 - On the first start, the viewer asks for the folder Fraqcel is installed in and its 64-bit DLL, `FraqcelLib2150_x64.dll`.
+  - For someone without Fraqcel, it links to Fraqcel's download page and says which folder of the download has the DLLs.
   - It fills in `C:\fraqcel` if that folder exists, since Fraqcel's own instructions put the DLLs there. Choosing a folder fills in the DLL found in it, or in one of its subfolders.
   - The dialog checks the file as you choose it: it must be the released 2.15.0 DLL, by its SHA-256.
   - OK loads the DLL and saves both paths to `%LOCALAPPDATA%\FraqcelHost\settings.ini`. Exit closes the viewer.
@@ -120,7 +123,7 @@ Between runs, the viewer remembers its controls and the last view in the setting
 - makes a box zoom and a click zoom, goes back, renders the deep sample and saves an image;
 - saves, loads and deletes locations in `DIR\session.ini`;
 - saves the session and reads it back;
-- drives the DLL dialog: it refuses another file, fills in the DLL from its folder, and saves the choice to `DIR\settings.ini`.
+- drives the DLL dialog: it links to Fraqcel's download page (not clicked), refuses another file, fills in the DLL from its folder, and saves the choice to `DIR\settings.ini`.
 
 The self-test never asks for the DLL, so give it `--dll PATH` or have a saved setting. `--monitor` picks the monitor it opens on. The self-test skips the session at start and close; those were checked by starting the viewer with a scratch `--settings` file (2026-11-21).
 

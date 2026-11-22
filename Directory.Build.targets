@@ -1,0 +1,16 @@
+<Project>
+  <!--
+    The CLI and the tests get the stock DLL next to them, under its own file name.
+    The runtime looks for "FraqcelLib.dll" (the assembly name), so it never binds this file by
+    itself: the engine verifies the file's hash, then loads it (src/Fraqcel.Engine/Dll/FraqcelDll.cs).
+    The viewer gets no copy: it asks for Fraqcel's folder and DLL and saves the choice.
+  -->
+  <ItemGroup Condition="'$(OutputType)' == 'Exe' Or '$(IsTestProject)' == 'true'">
+    <None Include="$(FraqcelLibDir)$(FraqcelDllName)" Link="$(FraqcelDllName)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <Target Name="CheckFraqcelDll" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(FraqcelLibDir)$(FraqcelDllName)')"
+           Text="$(FraqcelLibDir)$(FraqcelDllName) is missing. Run tools\get-fraqcel-dll.ps1 first." />
+  </Target>
+</Project>

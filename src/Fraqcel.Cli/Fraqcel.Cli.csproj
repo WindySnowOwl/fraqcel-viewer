@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Fraqcel.Cli</RootNamespace>
+    <AssemblyName>fraqcel-cli</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fraqcel.Engine\Fraqcel.Engine.csproj" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Fraqcel.Engine</RootNamespace>
+    <AssemblyName>Fraqcel.Engine</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Compile against the stock DLL, but never copy it as FraqcelLib.dll (see Directory.Build.targets). -->
+    <Reference Include="FraqcelLib">
+      <HintPath>$(FraqcelLibDir)$(FraqcelDllName)</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fraqcel.Engine.Tests" />
+  </ItemGroup>
+
+</Project>

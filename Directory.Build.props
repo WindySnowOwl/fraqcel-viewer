@@ -1,0 +1,21 @@
+<Project>
+  <!-- Shared settings for every project under this folder. -->
+  <PropertyGroup>
+    <!-- Fraqcel's DLL runs on .NET Framework 4 inside Excel; the host uses the same runtime (design 4.2). -->
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <!-- The prototype is 64-bit only; an x86 build comes later (design 7.7). -->
+    <PlatformTarget>x64</PlatformTarget>
+    <Deterministic>true</Deterministic>
+    <!-- The version the viewer shows in its title bar. Change it here, for every project. -->
+    <Version>0.1</Version>
+    <Company>unofficial</Company>
+    <Product>Fraqcel viewer (unofficial)</Product>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <!-- The stock Fraqcel DLL, copied here by tools\get-fraqcel-dll.ps1 after a hash check. -->
+    <FraqcelLibDir>$(MSBuildThisFileDirectory)lib\</FraqcelLibDir>
+    <FraqcelDllName>FraqcelLib2150_x64.dll</FraqcelDllName>
+  </PropertyGroup>
+</Project>

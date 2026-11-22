@@ -1,0 +1,19 @@
+bin/
+obj/
+.vs/
+*.user
+TestResults/
+lib/*.dll
+out/
+
+# Fraqcel's own files (the workbook, its DLLs and their source): get them from Fraqcel's site.
+*.xlsm
+*.zip
+dllSource/
+optional DLL files/
+
+# Design notes and working screenshots: not part of the shared source.
+fraqcel-analysis.md
+fraqcel-host-design*.md
+fraqcel-zoom-offset.png
+screenshots/

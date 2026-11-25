@@ -4,7 +4,7 @@ An unofficial Windows viewer for [Fraqcel](https://fraqcel.weebly.com/), the dee
 
 It is not made or endorsed by Fraqcel's author. Fraqcel itself, with its user guide, is at [fraqcel.weebly.com](https://fraqcel.weebly.com/).
 
-![The viewer on Fraqcel's deep sample location](docs/viewer-deep-sample.png)
+![The viewer on Fraqcel's deep sample location, with the iteration value of the pixel under the pointer in the footer](docs/viewer-deep-sample.png)
 
 ## Getting started
 
